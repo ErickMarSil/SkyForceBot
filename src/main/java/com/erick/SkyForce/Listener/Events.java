@@ -12,42 +12,30 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenuInteraction;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import org.jetbrains.annotations.NotNull;
 
 // My Imports
 import java.awt.*;
 import  java.util.*;
+import java.util.List;
+
 public class Events extends ListenerAdapter {
-    ;
     private final Dotenv readerCommands;
     private final ArrayList<SlashCommandData> ListCommands;
     public Events(){
-        ListCommands = new ArrayList<SlashCommandData>();
+        ListCommands = new ArrayList<>();
         readerCommands = Dotenv.load();
     }
-
     @Override
     public void onStringSelectInteraction(StringSelectInteractionEvent event) {
         User user = event.getUser();
-        ArrayList<Role> role = new ArrayList<Role>();
-
-
-        switch (event.getInteraction().getValues().get(0)){
-            case "quest":
-                // COde
-                break;
-            case "zedd":
-                //code
-                break;
-            case "danone":
-
-                break;
-            case "membros":
-
-        }
+        //List<Role> role = new ArrayList<>();
+        String valueToTake = readerCommands.get("ROLE" + event.getInteraction().getValues().get(0));
+        //role.add().queue();
+        event.reply("seu cargo" + valueToTake).queue();
+        event.getGuild().addRoleToMember(user,event.getGuild().getRolesByName(valueToTake,false).get(0)).queue();
+        event.getGuild().addRoleToMember(user,event.getGuild().getRolesByName("ᴍᴇᴍʙʀᴏ",false).get(0)).queue();
     }
 
     @Override
@@ -67,14 +55,13 @@ public class Events extends ListenerAdapter {
         return eb.setAuthor("SkyForce Bot")
             .setTitle("Só uma pergunta!")
             .setColor(new Color(255, 255, 255))
-            .setDescription("Qual level voce é no mush?").build();
+            .setDescription("Quem voce prefere? Resposta certa: Question :D").build();
     }
     private StringSelectMenu createPlaceHolder(){
         return StringSelectMenu.create("levels").setPlaceholder("Quem você prefere?")
-            .addOption("Question","quest")
-            .addOption("Zeddron","zedd")
-            .addOption("Danone","danone")
-            .addOption("Nenhum", "membros").build();
+            .addOption("Question","1")
+            .addOption("Zeddron","2")
+            .addOption("Danone","3").build();
     }
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
